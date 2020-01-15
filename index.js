@@ -1,5 +1,5 @@
 
-const cTable = require("console.table")
+// const cTable = require("console.table")
 const allQuestions = require("./inq")
 const queries = require("./queries")
 
@@ -24,7 +24,7 @@ function mainMenu() {
                 break;
 
             case allQuestions.ADD_DEPARTMENT:
-                // functionHere()
+                addDepartment()
                 break;
             case allQuestions.ADD_ROLE:
                 // functionHere()
@@ -37,9 +37,8 @@ function mainMenu() {
                 connection.end()
                 break;
         }
-
-    });
-}
+    })
+};
 
 function viewRoles() {
     queries.roleAll().then(result => {
@@ -56,24 +55,25 @@ function viewEmployees() {
 function viewDepartments() {
     queries.departmentAll().then(result => {
         console.table(result);
-        allQuestions.departmentOptions().then(result => {
-            switch (result) {
-                case allQuestions.MAIN_MENU:
-                    mainMenu()
-                    break;
-                case allQuestions.ADD_DEPARTMENT:
-                    addDepartment()
-                    break;
+        return allQuestions.departmentOptions()
+    }).then(result => {
+        switch (result) {
+            case allQuestions.MAIN_MENU:
+                mainMenu()
+                break;
+            case allQuestions.ADD_DEPARTMENT:
+                addDepartment()
+                break;
 
-            }
-        })
+        }
     })
 };
 
 function addDepartment() {
     allQuestions.newDepartment().then(result => {
-        console.log(result);
+        return queries.addDepartment(result)
+    }).then(result => {
+        viewDepartments()
 
     })
-
-}
+};

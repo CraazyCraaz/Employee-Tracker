@@ -8,8 +8,8 @@ const ADD_EMPLOYEE = "Add Employee";
 const ADD_DEPARTMENT = "Add Department";
 const ADD_ROLE = "Add Role";
 const UPDATE_ROLE = "Update Employee Role";
-const MAIN_MENU = "Main Menu"
-const QUIT = "QUIT"
+const MAIN_MENU = "Main Menu";
+const QUIT = "QUIT";
 
 // START of main questions / prompts for user
 function mainQuestionMenu() {
@@ -17,6 +17,7 @@ function mainQuestionMenu() {
         inquirer.prompt({
             message: "what would you like to do?",
             type: "list",
+            pageSize: 10,
             choices: [
                 ALL_EMPLOYEES,
                 ALL_DEPARTMENTS,
@@ -27,13 +28,12 @@ function mainQuestionMenu() {
                 UPDATE_ROLE,
                 QUIT
             ],
-            name: "menuChoice"
+            name: "choice"
         }).then(answers => {
             // call out function based on user choice from prompts
-            resolve(answers.menuChoice)
+            resolve(answers.choice)
         })
     })
-
 };
 function departmentOptions() {
     return new Promise((resolve, reject) => {
@@ -50,7 +50,7 @@ function departmentOptions() {
             resolve(answers.departmentChoice)
         })
     })
-}
+};
 function newDepartment() {
     return new Promise((resolve, reject) => {
         inquirer.prompt({
@@ -62,7 +62,7 @@ function newDepartment() {
         })
     })
 
-}
+};
 module.exports = {
     ALL_EMPLOYEES,
     ALL_DEPARTMENTS,
