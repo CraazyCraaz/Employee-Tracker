@@ -27,7 +27,7 @@ function mainMenu() {
                 addDepartment()
                 break;
             case allQuestions.ADD_ROLE:
-                // functionHere()
+                addRole()
                 break;
             case allQuestions.UPDATE_ROLE:
                 // functionHere()
@@ -43,6 +43,24 @@ function mainMenu() {
 function viewRoles() {
     queries.roleAll().then(result => {
         console.table(result);
+        return allQuestions.roleOptions()
+    }).then(result => {
+        switch (result) {
+            case allQuestions.MAIN_MENU:
+                mainMenu()
+                break;
+            case allQuestions.ADD_ROLE:
+                addRole()
+                break;
+        }
+    })
+};
+
+function addRole() {
+    allQuestions.newRole().then(result => {
+        return queries.addRole(result.title, result.salary)
+    }).then(result => {
+        viewRoles()
     })
 };
 
@@ -74,6 +92,5 @@ function addDepartment() {
         return queries.addDepartment(result)
     }).then(result => {
         viewDepartments()
-
     })
 };

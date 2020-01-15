@@ -35,6 +35,46 @@ function mainQuestionMenu() {
         })
     })
 };
+
+function roleOptions() {
+    return new Promise((resolve, reject) => {
+        inquirer.prompt({
+            message: "What would you like to do?",
+            type: "list",
+            choices: [
+                ADD_ROLE,
+                MAIN_MENU
+            ],
+            name: "roleChoice"
+        }).then(answers => {
+            resolve(answers.roleChoice)
+        })
+    })
+}
+
+function newRole() {
+    let role = { title:"", salary:"" };
+    return new Promise((resolve, reject) => {
+        inquirer.prompt({
+            type: "input",
+            message: "Please enter new role",
+            name: "roleName"
+        }).then(answers => {
+            role.title = answers.roleName;
+
+            return inquirer.prompt({
+                type: "input",
+                message: "What is the salary?",
+                name: "salary"
+            })
+        }).then(answers => {
+            role.salary = answers.salary;
+            resolve(role)
+        })
+    })
+
+}
+
 function departmentOptions() {
     return new Promise((resolve, reject) => {
         inquirer.prompt({
@@ -75,5 +115,7 @@ module.exports = {
     QUIT,
     mainQuestionMenu,
     departmentOptions,
-    newDepartment
+    newDepartment,
+    roleOptions,
+    newRole,
 };

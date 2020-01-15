@@ -22,6 +22,13 @@ function roleAll() {
     return runQuery(`SELECT * FROM ${ROLE}`)
 };
 
+function addRole(title, salary) {
+    title = connection.escape(title);
+    salary = connection.escape(salary);
+    return runQuery(`INSERT INTO ${ROLE} (title, salary) VALUES (${title}, ${salary})`)
+    
+}
+
 function employeeAll() {
     return runQuery(`SELECT * FROM ${EMPLOYEE}`)
 };
@@ -51,5 +58,6 @@ module.exports = {
     roleAll,
     employeeAll,
     departmentAll,
-    addDepartment
+    addDepartment,
+    addRole
 }
