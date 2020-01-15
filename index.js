@@ -8,11 +8,11 @@ function mainMenu() {
     allQuestions.mainQuestionMenu().then(result => {
         switch (result) {
             case allQuestions.ALL_EMPLOYEES:
-                
+                viewEmployees()
                 break;
 
             case allQuestions.ALL_DEPARTMENTS:
-                // departmentAll()
+                viewDepartments()
                 break;
 
             case allQuestions.ALL_ROLES:
@@ -37,14 +37,43 @@ function mainMenu() {
                 connection.end()
                 break;
         }
-        
+
     });
 }
 
 function viewRoles() {
     queries.roleAll().then(result => {
+        console.table(result);
+    })
+};
+
+function viewEmployees() {
+    queries.employeeAll().then(result => {
+        console.table(result);
+    })
+};
+
+function viewDepartments() {
+    queries.departmentAll().then(result => {
+        console.table(result);
+        allQuestions.departmentOptions().then(result => {
+            switch (result) {
+                case allQuestions.MAIN_MENU:
+                    mainMenu()
+                    break;
+                case allQuestions.ADD_DEPARTMENT:
+                    addDepartment()
+                    break;
+
+            }
+        })
+    })
+};
+
+function addDepartment() {
+    allQuestions.newDepartment().then(result => {
         console.log(result);
-        
-    }) 
-    
+
+    })
+
 }
