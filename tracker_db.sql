@@ -28,15 +28,22 @@ CREATE TABLE employee (
 
 -- So the tables aren't empty --
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-values ("Jenny", "Thurnau", 2, null);
+values ("Jenny", "Thurnau", 1, null);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+values ("Tim", "Clark", 2, 1);
 
 INSERT INTO role (title, salary, department_id)
+values ("Manager", 250000, 1);
+INSERT INTO role (title, salary, department_id)
 values ("Engineer", 75000, 1);
+INSERT INTO role (title, salary, department_id)
+values ("Mechanic", 60000, 3);
+INSERT INTO role (title, salary, department_id)
+values ("Intern", 40000, 2);
 
 INSERT INTO department (name)
 values ("Engineering");
-
--- Different SELECTS --
-SELECT *
-FROM employee
-INNER JOIN role ON employee.role_id = role.title;
+INSERT INTO department (name)
+values ("Supply Chain");
+INSERT INTO department (name)
+values ("Manufacturing");

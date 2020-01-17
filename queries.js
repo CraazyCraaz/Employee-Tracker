@@ -19,30 +19,52 @@ connection.connect(function (err) {
 });
 
 function roleAll() {
-    return runQuery(`SELECT * FROM ${ROLE}`)
+    return runQuery(`
+    SELECT 
+        ${ROLE}.title,
+        ${ROLE}.salary,
+        ${DEPARTMENT}.name
+    FROM ${ROLE}
+    JOIN ${DEPARTMENT} ON
+        ${DEPARTMENT}.id = ${ROLE}.department_id`)
 };
 
-function addRole(title, salary) {
+function addRole(title, salary, departmentId) {
     title = connection.escape(title);
     salary = connection.escape(salary);
-    return runQuery(`INSERT INTO ${ROLE} (title, salary) VALUES (${title}, ${salary})`)
-    
-}
+    return runQuery(`INSERT INTO ${ROLE} (title, salary, department_id) VALUES (${title}, ${salary}, ${departmentId})`)
+
+};
 
 function employeeAll() {
     return runQuery(`SELECT * FROM ${EMPLOYEE}`)
+    //JOIN ${ROLE} ON ${EMPLOYEE.role_id} = ${ROLE.department_id}
 };
+//================================================
+function addEmployee(first_name, last_name, role_id, manager_id) {
+    first_name = connection.escape(first_name);
+    last_name = connection.escape(last_name);
+    role_id = connection.escape(role_id);
+    manager_id = connection.escape(manager_id);
+    return runQuery(`INSERT INTO ${employee} (first_name, last_name, role_id, manager_id) VALUES (${first_name}, ${last_name}, ${role_id}, ${manager_id})`)
 
-function departmentAll() {
-    return runQuery(`SELECT * FROM ${DEPARTMENT}`)
+};
+//================================================
+
+function departmentAll(allColumns = false) {
+    if (allColumns == true) {
+        return runQuery(`SELECT * FROM ${DEPARTMENT}`)
+    } else {
+        return runQuery(`SELECT name FROM ${DEPARTMENT}`)
+    }
 };
 
 function addDepartment(name) {
     // escape will clean user input so it can't break the database
     name = connection.escape(name)
     return runQuery(`INSERT INTO ${DEPARTMENT} (name) VALUES (${name})`)
-}
-
+};
+// a function for dry code, can be used for connection.query in other functions
 function runQuery(query) {
     return new Promise((resolve, reject) => {
         connection.query(query, function (err, data) {
@@ -59,5 +81,6 @@ module.exports = {
     employeeAll,
     departmentAll,
     addDepartment,
-    addRole
+    addRole,
+    addEmployee
 }

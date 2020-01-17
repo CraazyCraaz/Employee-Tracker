@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-
+const queries = require("./queries")
 
 const ALL_EMPLOYEES = "View All Employees";
 const ALL_DEPARTMENTS = "View All Departments";
@@ -35,7 +35,7 @@ function mainQuestionMenu() {
         })
     })
 };
-
+// prompts for adding role
 function roleOptions() {
     return new Promise((resolve, reject) => {
         inquirer.prompt({
@@ -50,10 +50,19 @@ function roleOptions() {
             resolve(answers.roleChoice)
         })
     })
-}
+};
 
 function newRole() {
-    let role = { title:"", salary:"" };
+    let role = { title: "", salary: "", departmentId: "" };
+    let departmentList = [];
+    let departments
+    queries.departmentAll(true).then(results => {
+        departments = results
+        departments.forEach(department => {
+            departmentList.push(department.name)
+        })
+    })
+
     return new Promise((resolve, reject) => {
         inquirer.prompt({
             type: "input",
@@ -69,11 +78,24 @@ function newRole() {
             })
         }).then(answers => {
             role.salary = answers.salary;
-            resolve(role)
+
+            return inquirer.prompt({
+                type: "list",
+                message: "Which department?",
+                name: "deptChoice",
+                choices: departmentList
+            })
+        }).then(answers => {
+            departments
+            .filter(department => department.name == answers.deptChoice)
+            .forEach(department => {
+                role.departmentId = department.id
+            })
+            resolve(role)            
         })
     })
 
-}
+};
 
 function departmentOptions() {
     return new Promise((resolve, reject) => {
@@ -91,6 +113,7 @@ function departmentOptions() {
         })
     })
 };
+
 function newDepartment() {
     return new Promise((resolve, reject) => {
         inquirer.prompt({
@@ -103,6 +126,62 @@ function newDepartment() {
     })
 
 };
+//======================================================
+function employeeOptions() {
+    return new Promise((resolve, reject) => {
+        inquirer.prompt({
+            message: "what would you like to do?",
+            type: "list",
+            choices: [
+                ADD_EMPLOYEE,
+                MAIN_MENU
+            ],
+            name: "employeeChoice"
+        }).then(answers => {
+            // call out function based on user choice from prompts
+            resolve(answers.employeeChoice)
+        })
+    })
+};
+
+function newEmployee() {
+    return new Promise((resolve, reject) => {
+        inquirer.prompt({
+            type: "input",
+            message: "Please enter first name",
+            name: "firstname"
+        }).then(answers => {
+            employee.first_name = answers.firstname;
+
+            return inquirer.prompt({
+                type: "input",
+                message: "Please enter last name",
+                name: "lastname"
+            })
+        }).then(answers => {
+            employee.last_name = answers.lastname;
+
+            return inquirer.prompt({
+                type: "input",
+                message: "Please enter role id",
+                name: "roleid"
+            })
+        }).then(answers => {
+            employee.role_id = answers.roleid;
+
+            return inquirer.prompt({
+                type: "input",
+                message: "Please enter managers id",
+                name: "managerid"
+            })
+        }).then(answers => {
+            employee.manager_id = answers.manager_id;
+            resolve(employee)
+        })
+    })
+
+};
+//============================================================
 module.exports = {
     ALL_EMPLOYEES,
     ALL_DEPARTMENTS,
@@ -118,4 +197,6 @@ module.exports = {
     newDepartment,
     roleOptions,
     newRole,
+    employeeOptions,
+    newEmployee
 };
