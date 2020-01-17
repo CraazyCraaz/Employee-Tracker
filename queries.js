@@ -37,8 +37,17 @@ function addRole(title, salary, departmentId) {
 };
 
 function employeeAll() {
-    return runQuery(`SELECT * FROM ${EMPLOYEE}`)
-    //JOIN ${ROLE} ON ${EMPLOYEE.role_id} = ${ROLE.department_id}
+    return runQuery(`
+    SELECT
+        ${EMPLOYEE}.first_name AS "First Name",
+        ${EMPLOYEE}.last_name AS "Last Name",
+        ${ROLE}.title AS "Role", 
+        ${DEPARTMENT}.name AS "Department Name"
+    FROM ${EMPLOYEE}
+    JOIN ${ROLE} ON
+        ${ROLE}.id = ${EMPLOYEE}.role_id
+    JOIN ${DEPARTMENT} ON
+        ${DEPARTMENT}.id = ${ROLE}.department_id`)
 };
 //================================================
 function addEmployee(first_name, last_name, role_id, manager_id) {
