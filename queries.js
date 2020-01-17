@@ -18,15 +18,38 @@ connection.connect(function (err) {
 
 });
 
-function roleAll() {
+function updateEmployeeRole(employeeId, roleId) {
     return runQuery(`
-    SELECT 
+    #Update is picking the table
+    UPDATE
+        ${EMPLOYEE}
+        #SET is setting to specific column in table
+    SET
+        role_id = ${roleId}
+        #WHERE specifies so it doesn't update all
+    WHERE
+        id = ${employeeId}`)    
+}
+
+function getEmployeeByID(employeeId) {
+    employeeId = connection.escape(employeeId)
+    return runQuery(`SELECT * FROM ${EMPLOYEE} WHERE id = ${employeeId}`)
+}
+
+function roleAll(allColumns = false) {
+    if (allColumns == true) {
+        return runQuery(`SELECT * FROM ${ROLE}`)
+    } else {
+        return runQuery(`
+    SELECT
         ${ROLE}.title,
         ${ROLE}.salary,
         ${DEPARTMENT}.name
     FROM ${ROLE}
     JOIN ${DEPARTMENT} ON
         ${DEPARTMENT}.id = ${ROLE}.department_id`)
+    }
+
 };
 
 function addRole(title, salary, departmentId) {
@@ -39,6 +62,7 @@ function addRole(title, salary, departmentId) {
 function employeeAll() {
     return runQuery(`
     SELECT
+        ${EMPLOYEE}.id AS "Employee ID",
         ${EMPLOYEE}.first_name AS "First Name",
         ${EMPLOYEE}.last_name AS "Last Name",
         ${ROLE}.title AS "Role", 
@@ -91,5 +115,7 @@ module.exports = {
     departmentAll,
     addDepartment,
     addRole,
-    addEmployee
+    addEmployee,
+    getEmployeeByID,
+    updateEmployeeRole
 }

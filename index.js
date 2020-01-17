@@ -23,9 +23,6 @@ function mainMenu() {
             case allQuestions.ADD_ROLE:
                 addRole()
                 break;
-            case allQuestions.UPDATE_ROLE:
-                // functionHere()
-                break;
             default:
                 connection.end()
                 break;
@@ -72,10 +69,21 @@ function viewEmployees() {
             case allQuestions.ADD_EMPLOYEE:
                 addEmployee()
                 break;
+            case allQuestions.UPDATE_ROLE:
+                updateEmployeeRole()
+                break;
         }
     })
     //=========================================
 };
+
+function updateEmployeeRole() {
+    allQuestions.updateEmployeeRole().then(result => {
+        return queries.updateEmployeeRole(result.employeeId, result.roleId)        
+    }).then(result =>{
+        viewEmployees()
+    })
+}
 
 //=========================================
 function addEmployee() {

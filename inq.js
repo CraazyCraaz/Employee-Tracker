@@ -56,9 +56,13 @@ function newRole() {
     let role = { title: "", salary: "", departmentId: "" };
     let departmentList = [];
     let departments
+    //Pulling from department table
     queries.departmentAll(true).then(results => {
+        //results are what we pulled form table, and putting into departments array, has both name and id
         departments = results
+        //looping through departments
         departments.forEach(department => {
+            // taking department names and pushing into departmentList
             departmentList.push(department.name)
         })
     })
@@ -86,15 +90,17 @@ function newRole() {
                 choices: departmentList
             })
         }).then(answers => {
-            departments
-            .filter(department => department.name == answers.deptChoice)
-            .forEach(department => {
-                role.departmentId = department.id
+            // names and id, looping through
+            departments.forEach(department => {
+                // if user input matches name
+                if (department.name == answers.deptChoice) {
+                    // take id to update role
+                    role.departmentId = department.id
+                }
             })
-            resolve(role)            
+            resolve(role)
         })
     })
-
 };
 
 function departmentOptions() {
@@ -134,12 +140,51 @@ function employeeOptions() {
             type: "list",
             choices: [
                 ADD_EMPLOYEE,
+                UPDATE_ROLE,
                 MAIN_MENU
             ],
             name: "employeeChoice"
         }).then(answers => {
             // call out function based on user choice from prompts
             resolve(answers.employeeChoice)
+        })
+    })
+};
+
+function updateEmployeeRole() {
+    let employee = { employeeId: "", roleId: "" }
+    let roles
+    let rolesList = [];
+    queries.roleAll(true).then(results => {
+        roles = results
+        roles.forEach(role => {
+            rolesList.push(role.title)
+        })
+    })
+    return new Promise((resolve, reject) => {
+        inquirer.prompt({
+            message: "Enter the employee id",
+            type: "input",
+            name: "employeeId",
+        }).then(answers => {
+            employee.employeeId = answers.employeeId
+            return queries.getEmployeeByID(answers.employeeId)
+        }).then(results => {
+            // console.log(results);
+
+            return inquirer.prompt({
+                type: "list",
+                message: "Which role?",
+                name: "roleChoice",
+                choices: rolesList
+            })
+        }).then(answers => {
+            roles
+                .filter(role => role.title == answers.roleChoice)
+                .forEach(role => {
+                    employee.roleId = role.id
+                })
+            resolve(employee)
         })
     })
 };
@@ -198,5 +243,6 @@ module.exports = {
     roleOptions,
     newRole,
     employeeOptions,
-    newEmployee
+    newEmployee,
+    updateEmployeeRole
 };
