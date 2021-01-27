@@ -47,3 +47,4 @@ INSERT INTO department (name)
 values ("Supply Chain");
 INSERT INTO department (name)
 values ("Manufacturing");
+
